@@ -1,0 +1,37 @@
+// customize bootstrap as needed
+(function () {
+    "use strict";
+    if (window.itrue.bscustom) return;
+    itrue.defineClass('bscustom', {
+        onInit: function () {
+            this.makeHoverDropdownMenu();
+        },
+        makeHoverDropdownMenu: function () {
+            // make bootstrap drop down menu work with
+            // mouseover and mouseout
+            $('.dropdown-toggle').each(function () {
+                var wgt = this,
+                    $wgt = $(wgt),
+                    func = function () { // close function
+                        if ($wgt.parent('.open')[0])
+                            $wgt.trigger('click');
+                    };
+                $wgt.on('mouseover', function () {
+                    itrue.clearTimeout(wgt, 'closeTimeout');
+                    if (!$wgt.parent('.open')[0]) {
+                        $wgt.trigger('click');
+                    }
+                }).on('mouseout', function () {
+                    itrue.replaceTimeout(wgt, func, 300, 'closeTimeout');
+                });
+                $wgt.next('.dropdown-menu')
+                    .on('mouseout', function (e) {
+                    itrue.replaceTimeout(wgt, func, 300, 'closeTimeout');
+                }).on('mouseover', function (e) {
+                    itrue.clearTimeout(wgt, 'closeTimeout');
+                });
+            });
+        }
+    });
+    itrue.newInst('bscustom');
+})();
