@@ -386,7 +386,17 @@
                 // store class in instance
                 inst['$class'] = clz;
                 inst['$super'] = function (fn, args) { // function used to call method in super class
-                    inst['$class'].prototype.parent.prototype[fn].apply(inst, args);
+                    var currentProto = inst.$superClass || inst['$class'].prototype,
+                        newProto = currentProto;
+                    while (newProto && currentProto[fn] == newProto[fn]) {
+                        if (newProto = newProto.parent)
+                            newProto = newProto.prototype;
+                    }
+                    if (newProto) {
+                        inst.$superClass = newProto;
+                        newProto[fn].apply(inst, args);
+                    }
+                    inst.$superClass = null;
                 };
                 // call instance level init if exists
                 if (inst['$init'])
