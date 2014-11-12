@@ -100,9 +100,9 @@
                 );
             },
             // decode HTML Entity (e.g. &amp;
-            decodeHTMLEntity: function (text) {
+            decodeHTMLEntity: function (text, idx, semiIdx) {
                 var e = itrue.decodeDiv;
-                e.innerHTML = text;
+                e.innerHTML = text.substring(idx, semiIdx);
                 return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
             },
             //
