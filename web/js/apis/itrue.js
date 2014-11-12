@@ -271,13 +271,11 @@
                             window.itrue.pushState(fullUrl, null, settings.stateObj);
                         if (callback = settings.callback) {
                             var args = [result], // argument array
-                                handler = settings.handler; // handler
+                                handler = settings.handler || callback; // handler, use callback itself as handler if needed
                             if (settings.extraData) // append extra argument if any
                                 args = args.concat(settings.extraData);
-                            if (handler) // run callback by handler
-                                callback.apply(handler, args);
-                            else  // run callback directly
-                                callback(args);
+                            // run callback by handler
+                            callback.apply(handler, args);
                         }
                         // run pending ajax if any
                         window.itrue.ajaxProcessing = false;
