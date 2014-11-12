@@ -151,13 +151,17 @@
             buildEncodeChars: function (opts) {
                 var chars = opts.toReplace,
                     encodeChars = {},
+                    cencodeChars = opts.encodeChars, // custom encoding
                     idx = 0, // current index of chars
                     len = chars.length, // length of chars
                     ch;
                 for ( ; idx < len; idx++) {
                     ch = chars.charAt(idx);
                     if (!encodeChars[ch]) {
-                        encodeChars[ch] = '&#'+ch.charCodeAt(0)+';';
+                        if (cencodeChars && cencodeChars[ch])
+                            encodeChars[ch] = cencodeChars[ch];
+                        else
+                            encodeChars[ch] = '&#'+ch.charCodeAt(0)+';';
                     }
                 }
 
@@ -187,7 +191,10 @@
                     if (!opts) opts = {};
                     opts.toReplace = '<>;"'; // replace <, >, ;, " by default
                     opts.storeAsDefault = true;
-                    encodeChars = window.defaultEncodeChars || this.buildEncodeChars(opts);
+                    if (!opts.encodeChars)
+                        encodeChars = window.defaultEncodeChars;
+                    if (!encodeChars)
+                        encodeChars = this.buildEncodeChars(opts);
                 } else
                     encodeChars = this.buildEncodeChars(opts);
                 for ( ; idx < len; idx++) {
