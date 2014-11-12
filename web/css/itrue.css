@@ -1,0 +1,34 @@
+
+.itrue-log-div {
+  right: 10px;
+  bottom: 5px;
+  width: 50%;
+  z-index: 999999;
+  position: absolute;
+  text-align: right;
+}
+.itrue-log-div textarea {
+  width: 100%;
+  border-color: rgba(83,169,237,0.8);
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.073),0 0 8px rgba(83,169,237,0.7);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.073),0 0 8px rgba(83,169,237,0.7);
+}
+.field {
+  margin: 10px 0px;
+}
+.expand-collapse-bar {
+  position: absolute;
+  background-color: #333;
+  z-index: 9999999;
+  cursor: pointer;
+}
+.expand-collapse-bar-hor {
+  height: 15px;
+  width: 50px;
+}
+.expand-collapse-bar-ver {
+  height: 50px;
+  width: 15px;
+}
+
