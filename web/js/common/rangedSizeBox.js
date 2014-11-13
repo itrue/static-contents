@@ -1,14 +1,14 @@
 // customize bootstrap as needed
 (function () {
     "use strict";
-    itrue.defineClass('rangedSizeBox', {
+    itrue.extend('componentWidget', 'rangedSizeBox', {
         maxWidth: null, // maximum width
         maxHeight: null, // maximum height
         minWidth: null, // minimum width
         minHeight: null, // minimum height
         dom: null, // dom element
         // constructor init
-        $init: function () {
+        createDom: function () {
             // create dom on init
             var dom = document.createElement('div');
             $(dom).addClass('ranged-size-box');

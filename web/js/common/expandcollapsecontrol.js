@@ -51,7 +51,7 @@
     // presume the target default status while setTarget is called
     // can call setTargetProperties manually to update default status of
     // target dom if needed
-    itrue.defineClass('expandCollapseControl', { // prototype
+    itrue.extend('componentWidget', 'expandCollapseControl', { // prototype
         // position settings
         // e.g. widget dom is at left
         //  -> then it should be vertical (dir)
@@ -65,7 +65,7 @@
         target: null,
         tProps: null,
         // initialize function
-        $init: function () {
+        createDom: function () {
             createDom(this);
         },
         // reposition

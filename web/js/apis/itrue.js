@@ -406,9 +406,6 @@
                 // call instance level init if exists
                 if (inst['$init'])
                     inst['$init']();
-                // register dom event if needed
-                if (inst.dom && window.itrue.domutil)
-                    itrue.domutil.registerInstDomEvent(inst);
                 // push event defined in clz prototype
                 for ( key in inst ) {
                     if (key.indexOf('on') == 0) // event
