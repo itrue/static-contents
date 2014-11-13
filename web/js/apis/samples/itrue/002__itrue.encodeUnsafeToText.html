@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>itrue.encodeUnsafeToText 使用示例</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://cdn.rawgit.com/itrue/static-contents/2e4e47edbd0b8c74467e99f7a419a95cb6001ae8/web/js/apis/itrue.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/itrue/static-contents/master/web/css/itrue.css">
+		<style>
+			.desc {
+				background-color: green;
+				font-size: 18px;
+				font-weight: bold;
+				overflow: auto;
+			}
+			.line {
+				margin-top: 5px;
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="desc">
+			<div class="line">itrue.encodeUnsafeToText 可以將字串做編碼</div>
+			<div class="line">用來避免 XSS 攻擊</div>
+			<div class="line">預設編碼的字元有 &lt;, &gt;, &quot;, ;</div>
+			<div class="line">可以在傳入的 opts 內加入 toReplace 屬性指定要編碼的字元</div>
+			<div class="line">也可以在傳入的 opts 內加入 encodeChars 屬性指定特定的字元編碼方式</div>
+		</div>
+		<script type="text/javascript">
+			// itrue.encodeUnsafeToText 的示例
+			itrue.log('<script>" abc !@#&$ "; 編碼後如下');
+			itrue.log(itrue.encodeUnsafeToText('<script>" abc !@#&$ ";'));
+			itrue.log('');
+
+			itrue.log('可指定 ! & 也要編碼如下');
+			itrue.log(itrue.encodeUnsafeToText('<script>" abc !@#&$ ";', {toReplace: '<>";!&'}));
+			itrue.log('');
+
+			itrue.log('也可指定 < > ; & 要編碼為 &lt; &gt; &quot; &amp; 如下');
+			// 先設定 dec 對照, 因為 < > 等不能直接做為 object property key,
+			// 只能以字串的方式指定
+			// ex 不行用 obj = {<: '&lt;'}, 只能用 obj = {}; obj['<'] = '&lt;';
+			var dec = {lt: '<', gt: '>', quot: ';', amp: '&'},
+				enc = {},
+				key;
+			// 將 dec 的 mapping 倒轉來生成 enc mapping
+			for ( key in dec ) {
+				enc[dec[key]] = '&'+key+';';
+			}
+			// 將生成的 enc mapping 指定為 opts 中的 encodeChars
+			itrue.log(itrue.encodeUnsafeToText('<script>" abc !@#&$ ";', {toReplace: '<>";!&', encodeChars: enc}));
+		</script>
+	</body>
+</html>

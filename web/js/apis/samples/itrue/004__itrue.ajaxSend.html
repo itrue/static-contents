@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>itrue.ajaxSend 使用示例</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://cdn.rawgit.com/itrue/static-contents/2e4e47edbd0b8c74467e99f7a419a95cb6001ae8/web/js/apis/itrue.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/itrue/static-contents/master/web/css/itrue.css">
+		<script type="text/javascript">
+			var url = 'http://maps.googleapis.com/maps/api/geocode/json',
+				data = ['address=%E5%8F%B0%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E5%8D%97%E6%98%8C%E8%B7%AF%E4%BA%8C%E6%AE%B575%E8%99%9F&language=en',
+					'address=%E5%8F%B0%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E5%8D%97%E6%98%8C%E8%B7%AF%E4%BA%8C%E6%AE%B577%E8%99%9F&language=en',
+					'address=%E5%8F%B0%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E5%8D%97%E6%98%8C%E8%B7%AF%E4%BA%8C%E6%AE%B579%E8%99%9F&language=en',
+					'address=%E5%8F%B0%E5%8C%97%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E5%8D%97%E6%98%8C%E8%B7%AF%E4%BA%8C%E6%AE%B581%E8%99%9F&language=en'];
+			// 一般的 function, 執行 context 就是它自己
+			function simpleCallback (v) {
+				itrue.log(v.results[0].formatted_address);
+			}
+			// 定義一個 object
+			var obj = {name: 'the defined object',
+				// object 內的 function,
+				// 執行時的 context 為叫用它的 object
+				// 可在其中以 this.xxx 取得 object 內的成員
+				simpleCallback: function (v) {
+					itrue.log(this.name + ' - ' + v.results[0].formatted_address);
+				}};
+			// 測試一
+			// 簡單的一般 ajax 呼叫, 並在之後呼叫 simpleCallback
+			function testOne () {
+				itrue.ajaxSend({ // do search
+					ajaxUrl: url,
+					ajaxData: data[0],
+					callback: simpleCallback
+				});
+			}
+			// 測試二
+			// 簡單的一般 ajax 呼叫, 並在之後呼叫 obj.simpleCallback
+			function testTwo () {
+				itrue.ajaxSend({ // do search
+					ajaxUrl: url,
+					ajaxData: data[1],
+					callback: obj.simpleCallback,
+					handler: obj
+				});
+			}
+			// 測試三
+			// 簡單的一般 ajax 呼叫
+			// 設置 updateUrl 更新瀏覽器網址與歷史記錄
+			function testThree () {
+				itrue.ajaxSend({ // do search
+					updateUrl: true,
+					ajaxUrl: window.location.href,
+					ajaxData: 'v=test3',
+					preventBrowserCache: true,
+					dataType: 'html' // 因為要求的是這個頁面, 因此指定 data type 為 html
+				});
+			}
+			// 測試四
+			// 簡單的一般 ajax 呼叫, 並在之後呼叫 simpleCallback
+			// 設置 cacheResult 將 response 儲存
+			// 從按此鈕第二次起不會再發送 request
+			function testFour () {
+				itrue.ajaxSend({ // do search
+					cacheResult: true,
+					ajaxUrl: url,
+					ajaxData: data[3],
+					callback: simpleCallback
+				});
+			}
+			// 測試五
+			// 簡單的一般 ajax 呼叫, 並在之後呼叫 simpleCallback
+			// 設置 preventBrowserCache 避免瀏覽器 cache
+			// 開起 console Network 可以看到發送的 url 後多帶了一個變動值
+			function testFive () {
+				itrue.ajaxSend({ // do search
+					preventBrowserCache: true,
+					ajaxUrl: url,
+					ajaxData: data[0],
+					callback: simpleCallback
+				});
+			}
+			// 測試六
+			// 簡單的一般 ajax 呼叫
+			// 設置 updateUrl 更新瀏覽器網址與歷史記錄
+			// 並設置 stateObj 可在 onpopstate 事件中處理
+			// 換頁時可看到 log 內容被重設回連到此頁時的情形
+			function testSix () {
+				itrue.ajaxSend({ // do search
+					updateUrl: true,
+					stateObj: {value: $('.itrue-log-cnt')[0].value},
+					ajaxUrl: window.location.href,
+					ajaxData: 'v=test6',
+					preventBrowserCache: true,
+					dataType: 'html' // 因為要求的是這個頁面, 因此指定 data type 為 html
+				});
+			}
+			// 處理 browser history popstate 事件
+			$(window).on('popstate', function (e) {
+				var state = e.state || e.originalEvent.state;
+				// 通常會在這裡根據網址和/或 state obj 修正頁面的狀態
+				if (state && state.value) {
+					if ($('.itrue-log-cnt')[0])
+						$('.itrue-log-cnt')[0].value = state.value;
+					else
+						itrue.log(state.value);
+				}
+			});
+		</script>
+		<style>
+			.desc {
+				background-color: green;
+				font-size: 18px;
+				font-weight: bold;
+				overflow: auto;
+			}
+			.line {
+				margin-top: 5px;
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="desc">
+			<div class="line">itrue.ajaxSend 包裝了 jQuery.ajax</div>
+			<div class="line">只給定 ajaxUrl 或 ajaxUrl+ajaxData 也可以用</div>
+			<div class="line">增加了處理瀏覽器歷史記錄與網址,</div>
+			<div class="line">循續處理多個 ajax request 以及 cache 結果的功能</div>
+			<div class="line"></div>
+			<div class="line">可設置 method (GET, POST) 做為 request type</div>
+			<div class="line"></div>
+			<div class="line">可設置 dataType (json, html) 為要求的資料類型</div>
+			<div class="line"></div>
+			<div class="line">可設置 preventBrowserCache 避免瀏覽器 cache</div>
+			<div class="line"></div>
+			<div class="line">若設置 updateUrl 則會更新瀏覽器網址列及歷史記錄</div>
+			<div class="line">此時可以再設置 stateObj 以便在上一頁/下一頁觸發 onpopstate 事件時做處理</div>
+			<div class="line"></div>
+			<div class="line">若設置 cacheResult 則會將 response 內容儲存起來, 並先嚐試取得之前儲存的內容</div>
+			<div class="line"></div>
+			<div class="line">可設置 callback function, 在 response 之後會呼叫它並將 data 帶進去</div>
+			<div class="line">若 callback 為某個特定 object 的成員函式, 則可再設定 handler 指定該 object 為處理者</div>
+			<div class="line"></div>
+			<div class="line">以下分別舉幾種狀況, ajax request 為將南昌路二段 75~81 號取得 geo 資訊</div>
+		</div>
+		<div class="line">
+			<div style="color: red">
+				註：測試三及測試六因 http 規格的限制, 要求對像為目前網址
+			</div>
+			<button onclick="testOne()">測試一</button>
+			<div class="line">簡單的一般 ajax 呼叫, 並以 simpleCallback 這個方法為 callback function</div>
+			<div class="line"></div>
+			<button onclick="testTwo()">測試二</button>
+			<div class="line">簡單的一般 ajax 呼叫, 並在之後呼叫 obj.simpleCallback</div>
+			<div class="line"></div>
+			
+			<button onclick="testThree()">測試三</button>
+			<div class="line">簡單的一般 ajax 呼叫</div>
+			<div class="line">設置 updateUrl 更新瀏覽器網址與歷史記錄</div>
+			<div class="line">點擊後可按 上一頁 下一頁 換頁</div>
+			<div class="line"></div>
+			
+			<button onclick="testFour()">測試四</button>
+			<div class="line">簡單的一般 ajax 呼叫, 並在之後呼叫 simpleCallback</div>
+			<div class="line">設置 cacheResult 將 response 儲存</div>
+			<div class="line">從按此鈕第二次起不會再發送 request</div>
+			<div class="line"></div>
+			
+			<button onclick="testFive()">測試五</button>
+			<div class="line">簡單的一般 ajax 呼叫, 並在之後呼叫 obj.simpleCallback</div>
+			<div class="line">設置 preventBrowserCache 避免瀏覽器 cache</div>
+			<div class="line">開起 console Network 可以看到發送的 url 後多帶了一個變動值</div>
+			<div class="line"></div>
+			
+			<button onclick="testSix()">測試六</button>
+			<div class="line">簡單的一般 ajax 呼叫</div>
+			<div class="line">設置 updateUrl 更新瀏覽器網址與歷史記錄</div>
+			<div class="line">點擊後可按 上一頁 下一頁 換頁</div>
+			<div class="line">並設置 stateObj 可在 onpopstate 事件中處理</div>
+			<div class="line">換頁時可看到 log 內容被重設回連到此頁時的情形</div>
+			<div class="line"></div>
+		</div>
+	</body>
+</html>

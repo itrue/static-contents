@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>itrue.log 使用示例</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://cdn.rawgit.com/itrue/static-contents/2e4e47edbd0b8c74467e99f7a419a95cb6001ae8/web/js/apis/itrue.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/itrue/static-contents/master/web/css/itrue.css">
+		<style>
+			.desc {
+				background-color: green;
+				font-size: 18px;
+				font-weight: bold;
+				overflow: auto;
+			}
+			.line {
+				margin-top: 5px;
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="desc">
+			<div class="line">itrue.log 可以將想要顯示的資料秀在網頁視窗上</div>
+			<div class="line">與 alert 類似, 但是不必一直按掉 alert box</div>
+			<div class="line">也與 console.log 類似, 但是不必開 console 視窗</div>
+			<div class="line">適合用在想 log 多筆訊息做 debug</div>
+			<div class="line">但不想一直關 alert box 也不想開 console 時</div>
+		</div>
+		<script type="text/javascript">
+			// itrue.log 的示例, 可以用它 log 各種訊息或 js 物件
+			var i = 123;
+			itrue.log('itrue.log');
+			itrue.log(i);
+			itrue.log($('.desc').length);
+			itrue.log($('.desc')[0]);
+		</script>
+	</body>
+</html>

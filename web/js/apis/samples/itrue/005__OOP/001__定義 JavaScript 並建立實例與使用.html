@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>定義 JavaScript 並建立實例與使用</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://cdn.rawgit.com/itrue/static-contents/2e4e47edbd0b8c74467e99f7a419a95cb6001ae8/web/js/apis/itrue.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/itrue/static-contents/master/web/css/itrue.css">
+		<style>
+			.desc {
+				background-color: green;
+				font-size: 18px;
+				font-weight: bold;
+				overflow: auto;
+			}
+			.line {
+				margin-top: 5px;
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="desc">
+			<div class="line">可以使用 itrue.defineClass('name', {/* 物件成員 */}); 定義 class</div>
+			<div class="line">再使用 itrue.newInst 來生成物件並使用</div>
+			<br/>
+			<div class="line">使用時機</div>
+			<div class="line">當許多地方有相近的 code, 只有部份屬性或方法不同時,</div>
+			<div class="line">就可以將相同的部份定義成 class,</div>
+			<div class="line">宣告時體後僅修改不同的部份來使用</div>
+			<br/>
+			<div class="line">如下為定義一個 hello 類別, 再生成兩個 hello 物件,</div>
+			<div class="line">再分別設定不同的 hello 用詞並呼叫各自的 sayHello 方法</div>
+		</div>
+		<script type="text/javascript">
+			// 定義 hello 物件
+			// 有預設的 hello 用詞
+			// 及修改 hello 用詞的方法與向某人 sayHello 方法
+			itrue.defineClass('hello', {
+				helloWord: 'Yo', // 預設的 hello 用詞
+				// 修改 hello 用詞的方法
+				setHelloWord: function (v) {
+					// 若有傳入值且與目前的值不同才修改
+					if (v && v != this.helloWord)
+						this.helloWord = v;
+				},
+				// 向傳入的對象 say hello
+				sayHello: function (name) {
+					itrue.log(this.helloWord + ', ' + name + '!');
+				}
+			});
+			var hi = itrue.newInst('hello'),
+				hola = itrue.newInst('hello');
+			hi.setHelloWord('Hi');
+			hola.setHelloWord('Hola');
+			hi.sayHello('Ben');
+			hola.sayHello('Aloha');
+		</script>
+	</body>
+</html>

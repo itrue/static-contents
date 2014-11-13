@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>繼承繼有類別並覆寫方法</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://cdn.rawgit.com/itrue/static-contents/2e4e47edbd0b8c74467e99f7a419a95cb6001ae8/web/js/apis/itrue.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/itrue/static-contents/master/web/css/itrue.css">
+		<style>
+			.desc {
+				background-color: green;
+				font-size: 18px;
+				font-weight: bold;
+				overflow: auto;
+			}
+			.line {
+				margin-top: 5px;
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="desc">
+			<div class="line">可以使用 itrue.extend('父類別名', '子類別名', {/* 子類別成員 */}) 做繼承</div>
+			<div class="line">會以傳入的 子類別名 宣告一個類別,</div>
+			<div class="line">這個新類別首先會擁有所有父類別的成員</div>
+			<div class="line">再根據傳入的子類別成員增加新成員或覆寫原有的成原</div>
+			<div class="line">子類別還可以用 $super ('方法名稱', arguments) 呼叫父類別中的方法</div>
+			<br/>
+			<div class="line">適用時機</div>
+			<div class="line">當子類別可以共用大部份父類別中的方法</div>
+			<div class="line">或需要以子類別宣告多個實體時</div>
+			<br/>
+			<div class="line">以下為定義一個 hello 類別</div>
+			<div class="line">再定義一個 helloWithPostWord 類別繼承 hello 類別</div>
+			<div class="line">此類別新增 postWord 相關成員與方法</div>
+			<div class="line">覆寫 sayHello 方法且在其中呼叫父類別的 sayHello 方法</div>
+		</div>
+		<script type="text/javascript">
+			// 定義 hello 類別
+			// 有與設的 hello word, 修改 hello word 的方法
+			// 及向某人 say hello 的方法
+			itrue.defineClass('hello', {
+				helloWord: 'Yo', // 預設的 hello word
+				// 修改 hello word 的方法
+				setHelloWord: function (v) {
+					// 若有傳入值且與原本的值不同才修改
+					if (v && v != this.helloWord)
+						this.helloWord = v;
+				},
+				// 向傳入的對象 say hello
+				sayHello: function (name) {
+					itrue.log(this.helloWord + ', ' + name + '!');
+				}
+			});
+			itrue.extend('hello', 'helloWithPostWord', {
+				// 要接在 say hello 之後說的話
+				postWord: 'Hows it going?',
+				// 修改 post word 的方法
+				setPostWord: function (v) {
+					// 有傳入值且與目前的值不同才修改
+					if (v && v != this.postWord)
+						this.postWord = v;
+				},
+				// 覆寫 sayHello, 呼叫父類別的方法並加上 postWord
+				sayHello: function (name) {
+					// 呼叫父類別的 sayHello
+					// 其中 arguments 為 JavaScript 的預設變數
+					// 為一個陣列, 會帶目前傳入的變數
+					// 在此即為 [name]
+					this.$super('sayHello', arguments);
+					itrue.log('  ' + this.postWord);
+				}
+			});
+			var hello = itrue.newInst('helloWithPostWord');
+			hello.setHelloWord('Hi');
+			hello.setPostWord('最近如何?');
+			hello.sayHello('Ben');
+		</script>
+	</body>
+</html>

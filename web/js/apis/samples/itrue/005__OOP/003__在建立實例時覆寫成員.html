@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>在建立實例時覆寫成員</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://cdn.rawgit.com/itrue/static-contents/2e4e47edbd0b8c74467e99f7a419a95cb6001ae8/web/js/apis/itrue.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/itrue/static-contents/master/web/css/itrue.css">
+		<style>
+			.desc {
+				background-color: green;
+				font-size: 18px;
+				font-weight: bold;
+				overflow: auto;
+			}
+			.line {
+				margin-top: 5px;
+				margin-bottom: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="desc">
+			<div class="line">使用 itrue.newInst 建立物件實體時</div>
+			<div class="line">可以多傳入一組成員新增成員或覆寫原本的成員</div>
+			<br/>
+			<div class="line">適用時機</div>
+			<div class="line">只有一個地方需要不同的方法實做</div>
+			<div class="line">而且不需要 call 原本的方法時</div>
+			<br/>
+			<div class="line">以下為定義一個 hello 類別並生成一個 hello 實體</div>
+			<div class="line">並在生成時覆寫 sayHello 方法及新增 postWord 相關成員與方法</div>
+		</div>
+		<script type="text/javascript">
+			// 定義 hello 類別
+			// 有與設的 hello word, 修改 hello word 的方法
+			// 及向某人 say hello 的方法
+			itrue.defineClass('hello', {
+				helloWord: 'Yo', // 預設的 hello word
+				// 修改 hello word 的方法
+				setHelloWord: function (v) {
+					// 若有傳入值且與原本的值不同才修改
+					if (v && v != this.helloWord)
+						this.helloWord = v;
+				},
+				// 向傳入的對象 say hello
+				sayHello: function (name) {
+					itrue.log(this.helloWord + ', ' + name + '!');
+				}
+			});
+			var hiWithPostWord = itrue.newInst('hello', {
+				// 要接在 say hello 之後說的話
+				postWord: 'Hows it going?',
+				// 修改 post word 的方法
+				setPostWord: function (v) {
+					// 有傳入值且與目前的值不同才修改
+					if (v && v != this.postWord)
+						this.postWord = v;
+				},
+				// say hello, 並加上 postWord
+				sayHello: function (name) {
+					itrue.log(this.helloWord + ', ' + name + '! ');
+					itrue.log('  ' + this.postWord);
+				}
+			});
+			hiWithPostWord.setHelloWord('Hi');
+			hiWithPostWord.setPostWord('最近如何?');
+			hiWithPostWord.sayHello('Ben');
+		</script>
+	</body>
+</html>
