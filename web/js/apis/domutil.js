@@ -50,6 +50,20 @@
                 }
             }
         },
+        // create dom elements from given html string
+        //  html: string, html to create dom
+        //
+        //  return: returns an array if has more than one root
+        //      returns dom element otherwise
+        createDomFromHtml: function (html) {
+            var div = document.createElement('div'),
+                child;
+            div.innerHTML = html;
+            child = div.childNodes;
+            if (child.length > 1)
+                return child;
+            return child[0];
+        },
         // create a fieldset to display
         // and hide the given dom
         //  dom: dom element to hide

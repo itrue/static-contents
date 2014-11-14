@@ -7,12 +7,9 @@
         minWidth: null, // minimum width
         minHeight: null, // minimum height
         dom: null, // dom element
-        // constructor init
+
         createDom: function () {
-            // create dom on init
-            var dom = document.createElement('div');
-            $(dom).addClass('ranged-size-box');
-            this.dom = dom;
+            return itrue.domutil.createDomFromHtml('<div class="ranged-size-box"></div>');
         },
         // wrapping target dom
         //  target: dom element

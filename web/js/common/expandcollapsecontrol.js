@@ -25,13 +25,7 @@
             });
         dom.style.display = 'block';
     }
-    // create widget dom element
-    function createDom (wgt) {
-        var dom = document.createElement('div');
 
-        wgt.dom = dom;
-        document.body.appendChild(dom);
-    }
     // set dom element class
     function applyStyle (wgt, dom) {
         var cls = 'expand-collapse-bar expand-collapse-bar-' + wgt.settings[wgt.position]['dir'];
@@ -64,10 +58,7 @@
         dom: null,
         target: null,
         tProps: null,
-        // initialize function
-        createDom: function () {
-            createDom(this);
-        },
+
         // reposition
         reposition: function () {
             reposition(this);
