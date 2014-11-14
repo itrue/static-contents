@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>定義並使用 widget</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://cdn.rawgit.com/itrue/static-contents/8343e0e80a9512dcd568e18b630d8e08511892a2/web/js/apis/itrue.js"></script>
+		<script src="https://cdn.rawgit.com/itrue/static-contents/8343e0e80a9512dcd568e18b630d8e08511892a2/web/js/apis/domutil.js"></script>
+		<script src="https://cdn.rawgit.com/itrue/static-contents/8343e0e80a9512dcd568e18b630d8e08511892a2/web/js/common/componentWidget.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/itrue/static-contents/8343e0e80a9512dcd568e18b630d8e08511892a2/web/css/itrue.css">
+		<style>
+			.desc {
+				background-color: green;
+				font-size: 18px;
+				font-weight: bold;
+				overflow: auto;
+			}
+			.line {
+				margin-top: 5px;
+				margin-bottom: 5px;
+			}
+			.email {
+				font-size: 18px;
+				margin: 10px;
+			}
+			.email input {
+				margin: 3px; /* bufer for error border */
+			}
+		</style>
+		<script type="text/javascript">
+			// 宣告 email 欄位,
+			// 會在下方生成物件
+			var emailField;
+			function send () {
+				if (emailField.isValid())
+					itrue.log('email 正確, 執行動作');
+				else
+					alert('email 錯誤 !');
+			}
+		</script>
+	</head>
+	<body>
+		<div class="desc">
+			<div class="line">可以使用 itrue.extend 繼承 componentWidget 並實做一個 widget 元件</div>
+			<div class="line">所謂 widget 元件指的是將 html dom 及相關 event 處理包裝在一起的網頁元件</div>
+			<div class="line">這需要引入 itrue.js, domutil.js 及 componentWidget.js</div>
+			<div class="line">關於有處理的 event 請見 domutil.js 內的 domEvts 列表</div>
+			<br/>
+			<div class="line">使用時機</div>
+			<div class="line">當一個元件可能常常會用到 (如 email 輸入欄位等)</div>
+			<div class="line">就可以將它包裝成 widget, 只要實做之後未來就可以重覆使用</div>
+			<div class="line">可放到外部 js 由多個專案共用, 程式碼的結構也會比較清楚</div>
+			<br/>
+			<div class="line">如下為定義一個 emailField 的 widget,</div>
+			<div class="line">其中包括欄位驗證、值的存取等功能</div>
+		</div>
+		<!-- 用來當 emailField widget 的 dom 元素
+			會在生成 emailField 後傳進去做使用
+			假設結構固定為 root 之下包一個 input 及一個 span -->
+		<div class="email">
+			Email: <input type="text"></input>
+			<span></span>
+		</div>
+		<!-- 假設按此鈕後做提交動作 -->
+		<button onclick="send()">Send</button>
+		<script type="text/javascript">
+			// 繼承 componentWidget 定義一個 emailField 類別
+			itrue.extend('componentWidget', 'emailField', {
+				selector: null, // 此 widget 取得元素用的 selector
+				valid: false, // 是否為合法的 email, 預設為 false
+				// 設定要使用的 selector
+				setSelector: function (v) {
+					if (v && v != this.selector)
+						this.selector = v;
+				},
+				// 任何 component widget 都需要實做 createDom 方法
+				// 建立自己的 dom 元素
+				// 這裡以傳入的 selector 取得外部元素來使用
+				//
+				// 也可以用在這裡才生成 dom 元素再 attach 到頁面的做法
+				createDom: function () {
+					return $(this.selector)[0];
+				},
+				// 因為是使用現成的 dom 元素
+				// attachDom 時就不必做任何事
+				// 故覆寫它
+				attachDom: itrue.$void,
+				// 驗證 email 並更新 valid 狀態
+				validate: function () {
+					var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+						inp = $(this.dom).find('input'),
+						valid = this.valid = re.test(inp.val());
+					if (!valid)
+						this.markError();
+					else
+						this.clearError();
+				},
+				// 回傳是否合法
+				isValid: function () {
+					return this.valid;
+				},
+				// 不合法時做提示的動作
+				markError: function () {
+					var $inp = $(this.dom).find('input'),
+						span = $(this.dom).find('span')[0];
+					$inp.css({'border': '3px solid #EE7777',
+						'margin': '0px'
+						});
+					span.innerHTML = 'error';
+				},
+				// 合法時顯示為合法的狀態
+				clearError: function () {
+					var $inp = $(this.dom).find('input'),
+						span = $(this.dom).find('span')[0];
+					$inp.css({'border': '',
+						'margin': '3px'
+						});
+					span.innerHTML = 'correct';
+				},
+				// 在 onkeyup 及 onblur 事件時做驗證
+				onKeyup: function () {
+					var wgt = this;
+					// 避免多餘的重覆驗證
+					if (this.validateTimer)
+						clearTimeout(this.validateTimer);
+					// 設定 timer, 在 0.3 秒後做驗證動作
+					this.validateTimer = setTimeout(function () {
+						wgt.validate();
+					}, 300);
+				}
+			});
+			// 以上是定義元件類別的部份
+			// 一旦定義好之後
+			// 就可以在任何專案中引入定義的檔案並如下使用
+			emailField = itrue.newInst('emailField');
+			emailField.setSelector('.email');
+			emailField.render();
+		</script>
+	</body>
+</html>
