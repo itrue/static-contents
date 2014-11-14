@@ -28,8 +28,7 @@
         registerInstDomEvent: function (wgt) {
             var dom = wgt.dom, // get dom element
                 evts = this.domEvts, // events map
-                key, // map key (event name listened by widget)
-                evtnm; // event name
+                key; // map key (event name listened by widget)
             // no dom element, stop
             if (!dom) return;
             
@@ -38,18 +37,16 @@
             // for each key
             for ( key in evts ) {
                 // if widget listen to it (has handler)
-                if (wgt[key]) {
-                    var objEvt = key;
-                    // get event name by key
-                    evtnm = evts[key];
-                    // trigger widget handler by event
-                    $dom.on(evtnm, function (e) {
-                        var event = e || window.event;
-                        itrue.triggerInstEvent(wgt, objEvt, e);
-                    });
-                }
+                if (wgt[key])
+					this.bindEvent($dom, wgt, evts[key], key);
             }
         },
+		bindEvent: function ($dom, wgt, evtnm, objEvt) {
+			$dom.on(evtnm, function (e) {
+				var event = e || window.event;
+				itrue.triggerInstEvent(wgt, objEvt, e);
+			});
+		},
         // create dom elements from given html string
         //  html: string, html to create dom
         //
