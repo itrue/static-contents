@@ -416,6 +416,16 @@
                     this.registerInstEvent(inst, events);
                 return inst;
             },
+            deleteInst: function (inst) {
+                var key,
+                    events = []; // event to remove
+                // push event defined in inst
+                for ( key in inst ) {
+                    if (key.indexOf('on') == 0) // event
+                        events.push(key);
+                }
+                this.unregisterInstEvent(inst, events);
+            },
             // register events for instance
             //  inst: object, instance of a class
             //  events: array, all events that should be registered
@@ -429,6 +439,20 @@
                     if (!insts)
                         insts = this.instEvtReg[e] = [];
                     insts.push(inst);
+                }
+            },
+            unregisterInstEvent: function (inst, events) {
+                var idx = 0,
+                    len = events.length,
+                    reg = this.instEvtReg,
+                    e, insts;
+                for ( ; idx < len; idx++) {
+                    e = events[idx];
+                    insts = reg[e];
+                    if (insts)
+                        insts.splice(insts.indexOf(inst), 1);
+                    if (!insts.length)
+                        delete reg[e];
                 }
             },
             // trigger event for all registered object instances

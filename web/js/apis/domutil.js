@@ -93,6 +93,17 @@
                     });
                 });
             }
+        },
+        // strip all tags including script from html string
+        stripHTMLTags: function (html) {
+            if (!html) return '';
+            var $html = $(html),
+                textNodes;
+            // remove all script element
+            $html.find('script').each(function () {
+                $(this).remove();
+            });
+            return $html.text() || itrue.encodeUnsafeToText(html);
         }
     }
 })();
