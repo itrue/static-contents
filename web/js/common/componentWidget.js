@@ -31,11 +31,19 @@
             if (parent)
                 parent.attachChild(this);
             document.body.appendChild(this.dom);
+            this.afterDomAttached();
+        },
+        afterDomAttached: function () {
+        
         },
         // attach child dom to self dom
         //  child: widget instance of child
         attachChild: function (child) {
             this.dom.appendChild(child.dom);
+        },
+        destroy: function () {
+            itrue.deleteInst(this);
+            $(this.dom).remove();
         }
     });
 })();

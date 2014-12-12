@@ -14,6 +14,38 @@
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.073),0 0 8px rgba(83,169,237,0.7);
   box-shadow: inset 0 1px 1px rgba(0,0,0,0.073),0 0 8px rgba(83,169,237,0.7);
 }
+/* styles for screen-console */
+.screen-console {
+  display: block;
+  width: 100%;
+}
+.screen-console .container {
+  position: fixed;
+  width: 100%;
+  height: 50%;
+  bottom: 2px;
+}
+.screen-console .container .close-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 3;
+}
+.screen-console .container .output {
+  display: block;
+  width: 100%;
+  height: 40%;
+  position: absolute;
+  top: 10%;
+  overflow: auto;
+}
+.screen-console .container .input-container {
+  display: block;
+  width: 100%;
+  height: 50%;
+  position: absolute;
+  bottom: 0;
+}
 .field {
   margin: 10px 0px;
 }
