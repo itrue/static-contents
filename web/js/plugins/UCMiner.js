@@ -348,9 +348,10 @@
 					if (showResult) {
 						var dbgDiv = $('.dbgDiv')[0] ||
 							$('<div class="dbgDiv" style="position: relative; padding-top: 30px;">'
-							+ 	'<div class="clear" style="position: absolute; left: 0; top: 0; cursor: pointer;" onclick="$(this).nextAll().remove()">Clear</div>'
+							+ 	'<div class="clear" style="position: absolute; left: 0; top: 0; cursor: pointer;" onclick="$(this).nextAll().empty()">Clear</div>'
+							+	'<div class="cnt" style="width: 100%;"></div>'
 							+'</div>').appendTo(document.body)[0];
-						$(dbgDiv).append(requests[idx]+'<br/>').append($data.addClass('fetched-data'));
+						$(dbgDiv).find('.cnt').append(requests[idx]+'<br/>').append($data.addClass('fetched-data'));
 					}
 
 					// 有其餘 request 則繼續
