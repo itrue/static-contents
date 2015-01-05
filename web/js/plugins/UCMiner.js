@@ -345,8 +345,13 @@
 						}
 					}
 					// debug 用
-					if (showResult)
-						$(document.body).append(requests[idx]+'<br/>').append($data.addClass('fetched-data'));
+					if (showResult) {
+						var dbgDiv = $('.dbgDiv')[0] ||
+							$('<div class="dbgDiv" style="position: relative; padding-top: 30px;">'
+							+ 	'<div style="position: absolute; left: 0; top: 0; cursor: pointer;">Clear</div>'
+							+'</div>').appendTo(document.body)[0];
+						$(dbgDiv).append(requests[idx]+'<br/>').append($data.addClass('fetched-data'));
+					}
 
 					// 有其餘 request 則繼續
 					idx += 1;
