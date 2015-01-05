@@ -348,7 +348,7 @@
 					if (showResult) {
 						var dbgDiv = $('.dbgDiv')[0] ||
 							$('<div class="dbgDiv" style="position: relative; padding-top: 30px;">'
-							+ 	'<div style="position: absolute; left: 0; top: 0; cursor: pointer;">Clear</div>'
+							+ 	'<div class="clear" style="position: absolute; left: 0; top: 0; cursor: pointer;" onclick="$(this).nextAll().remove()">Clear</div>'
 							+'</div>').appendTo(document.body)[0];
 						$(dbgDiv).append(requests[idx]+'<br/>').append($data.addClass('fetched-data'));
 					}
