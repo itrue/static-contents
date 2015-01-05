@@ -377,7 +377,7 @@
 								}
 							}
 						}
-						if (csvDatas.length) {
+						if (csvDatas.length && !fsplit) {
 							$dlLink[0].href += encodeURIComponent(csvDatas.join('\n'));
 							$dlLink[0].click();
 							infoBlock.addNotify('<br/>');
