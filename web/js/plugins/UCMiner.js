@@ -250,7 +250,7 @@
 				fileName = block.find('.fname').val() || 'SearchResult', // 下載檔名
 				fsplit = block.find('.fsplit')[0].checked,
 				showResult = block.find('.showResult')[0].checked,
-				$dlLink = $('<a download="'+fileName+'.xls" href="data:application/csv;charset=utf-8," target="_blank">下載</a>'),
+				$dlLink = $('<a download="'+fileName+'.csv" href="data:application/csv;charset=utf-8," target="_blank">下載</a>'),
 				infoBlock = getDownloadInfoBlock(),
 				csvDatas = [], // 最後要下載的內容
 				tmpCsvData = [], // 中間暫存的部份
@@ -332,14 +332,14 @@
 					});
 					if (fsplit) { // 分割下載
 						if (csvDatas.length > 2) { // 只有 title 則略過
-							$dlLink[0].download = fileName + '-'+idx+'.xls';
-							$dlLink[0].innnerHTML = fileName + '-'+idx+'.xls';
-							$dlLink[0].href += encodeURIComponent(requests[idx]+'\n'+csvDatas.join('\n'));
+							$dlLink[0].download = fileName + '-'+idx+'.csv';
+							$dlLink[0].innnerHTML = fileName + '-'+idx+'.csv';
+							$dlLink[0].href += encodeURIComponent(requests[idx]+'\r\n'+csvDatas.join('\r\n'));
 							$dlLink[0].click();
 							infoBlock.addNotify($dlLink);
 							infoBlock.addNotify('<br/>');
 							// create new link
-							$dlLink = $('<a download="'+fileName+'.xls" href="data:application/csv;charset=utf-8," target="_blank">下載</a>')
+							$dlLink = $('<a download="'+fileName+'.csv" href="data:application/csv;charset=utf-8," target="_blank">下載</a>')
 							// reset css data
 							csvDatas = [];
 						}
@@ -378,7 +378,7 @@
 							}
 						}
 						if (csvDatas.length && !fsplit) {
-							$dlLink[0].href += encodeURIComponent(csvDatas.join('\n'));
+							$dlLink[0].href += encodeURIComponent(csvDatas.join('\r\n'));
 							$dlLink[0].click();
 							infoBlock.addNotify('<br/>');
 							infoBlock.addNotify($dlLink);
