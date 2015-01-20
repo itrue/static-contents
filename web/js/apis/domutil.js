@@ -94,19 +94,26 @@
                 });
             }
         },
-        loadScript: function (src, callback) {
+        loadScript: function (src, callback, props) {
             var script = document.createElement('script'),
                 head = $('head')[0],
+                key,
                 applyCallback = function () {
-                    callback();
+                    if (callback)
+                        callback();
                     script.onload = script.onreadystatechange = null;
                 };
-            script.type = 'text/javascript';
             script.src = src;
-            script.onload = applyCallback;
-            script.onreadystatechange = function() {
-                if (this.readyState == 'complete') {
-                    applyCallback();
+            if (props) {
+                for (key in props)
+                    script[key] = props[key];
+            }
+            if (callback) {
+                script.onload = applyCallback;
+                script.onreadystatechange = function() {
+                    if (this.readyState == 'complete') {
+                        applyCallback();
+                    }
                 }
             }
             head.appendChild(script);
@@ -149,6 +156,26 @@
                 $(this).remove();
             });
             return $html.text() || itrue.encodeUnsafeToText(html);
+        },
+        setSelectionRange: function (inp, start, end) {
+	        var len = inp.value.length;
+	        if (start == null || start < 0) start = 0;
+	        if (start > len) start = len;
+	        if (end == null || end > len) end = len;
+	        if (end < 0) end = 0;
+
+	        if (inp.setSelectionRange) {
+		        inp.setSelectionRange(start, end);
+	        } else if (inp.createTextRange) {
+		        var range = inp.createTextRange();
+		        if(start != end){
+			        range.moveEnd('character', end - range.text.length);
+			        range.moveStart('character', start);
+		        }else{
+			        range.move('character', start);
+		        }
+		        range.select();
+	        }
         }
     };
     // console widget
