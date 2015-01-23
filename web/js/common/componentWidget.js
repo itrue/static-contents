@@ -7,7 +7,12 @@
     itrue.defineClass('componentWidget', { // prototype
         dom: null, // self dom element
         parentWgt: null, // parent widget instance
-        jqfns: [],
+        jqfns: null,
+        getJqFns: function () {
+            if (!this.jqfns)
+                this.jqfns = [];
+            return this.jqfns;
+        },
         // generate dom and
         // attach dom to page
         // initialize event listener
@@ -51,12 +56,12 @@
             $(this.dom).remove();
         },
         on: function (evtnm, func) {
-		    this.jqfns.push({nm: evtnm, fn: func});
+		    this.getJqFns().push({nm: evtnm, fn: func});
 		    if (this.dom)
 			    $(this.dom).on(evtnm, func);
 	    },
 	    off: function (evtnm, func) {
-		    var jqfns = this.jqfns,
+		    var jqfns = this.getJqFns(),
 			    len = jqfns.length,
 			    idx = 0,
 			    ele;
@@ -71,7 +76,7 @@
 		    }
 	    },
 	    initJqFns: function () {
-		    var jqfns = this.jqfns,
+		    var jqfns = this.getJqFns(),
 			    idx = 0,
 			    len = jqfns.length,
 			    jqfn,
