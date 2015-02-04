@@ -176,6 +176,108 @@
 		        }
 		        range.select();
 	        }
+        },
+        dockToBottomLeft: function (target, dom) {
+	        var $target = $(target);
+	        $(document.body).append(dom);
+	        $(dom).css({
+		        'position': 'absolute',
+		        'left': $target.offset().left+'px',
+		        'top': $target.offset().top +$target.height()+'px'
+	        });
+        },
+        // 自動將內容置中
+        // opts {
+        //     container: {
+        //           selector: '.auto-center-container', // 容器 selector, 預設值如左
+        //           events: {'resize': true} // 要處理的 event, 無預設值
+        //       }
+        //       content:  {
+        //            selector: '.auto-center-content' // 內容 selector, 預設值如左
+        //            events: {'load': true} // 要處理的 event, 無預設值
+        //       }
+        // }
+        autoCenterContentH: function (opts) {
+            opts = opts || {};
+            opts.container = opts.container || {};
+            opts.content = opts.content || {};
+            var $containers = $(opts.container.selector || '.auto-center-container'),
+                centerContent = function ($container, $cnt) {
+                    var cntw = $cnt.width(),
+		                diff = $container.width() - cntw;
+		            if (cntw && diff) {
+		                $cnt.css({
+		                    'position': 'relative',
+		                    'left': diff/2 + 'px'
+		                });
+		            }
+                };
+            $containers.each(function () {
+                var $self = $(this),
+                    $content = $self.find(opts.content.selector || 'img').eq(0),
+                    key;
+                // center content
+                centerContent($self, $content);
+                for (key in (opts.container.events || {}))
+                    $self.on(key, function () {
+                        centerContent($self, $content);
+                    });
+                for (key in (opts.content.events || {}))
+                    $content.eq(0).on(key, function () {
+                        centerContent($self, $content);
+                    });
+            });
+        },
+        initPlaceholder: function (inp, placeholder) {
+	        var $inp = $(inp);
+	        if ($inp.hasClass('placeholder-inited')) return;
+	        $inp.addClass('placeholder-inited');
+	        if ($inp[0]) {
+		        if (!$inp.val())
+			        $inp.val(placeholder);
+		        var fixCursorPos = function () {
+				        if ($inp.val() == placeholder)
+					        setTimeout(function () {
+						        setSelectionRange($inp[0], 0, 0);
+					        }, 0);
+			        },
+			        fixInputValue = function (clear) {
+				        if (clear
+					        || ($inp.val()
+						        && $inp.val().indexOf(placeholder) > 0
+						        && $inp.val() != placeholder)) {
+					        $inp.val($inp.val().replace(placeholder, ''));
+				        }
+				        if ($inp.val() != placeholder)
+					        $inp.trigger('placehoder-cleared');
+			        };
+		        $inp.on('blur', function () {
+			        if (!$inp.val())
+				        $inp.val(placeholder);
+		        }).on('focus', function () {
+			        fixCursorPos();
+		        }).on('click', function () {
+			        fixCursorPos();
+		        }).on('keydown', function (e) {
+			        var keyCode = e.keyCode;
+			        if ((keyCode == 8 || keyCode == 46)
+				        && $inp.val() == placeholder)
+				        fixInputValue(true);
+				
+			        setTimeout(function () {
+				        fixCursorPos();
+				        fixInputValue();
+			        }, 0);
+		        }).on('keypress', function () {
+			        setTimeout(function () {
+				        fixCursorPos();
+				        fixInputValue();
+			        }, 0);
+		        }).on('keyup', function () {
+			        fixCursorPos();
+			        fixInputValue();
+		        });
+	        }
         }
     };
     // console widget

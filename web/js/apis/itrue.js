@@ -346,6 +346,34 @@
                     .substring(1);
                 return '/'+str+'/';
             },
+            // set cookie
+            setCookie: function (cookieName, cookieValue, expTime, cookiePath) {
+                document.cookie = cookieName + '=' + cookieValue
+                        + '; expires=' + expTime.toGMTString()
+                        + '; path=' + cookiePath;
+            },
+            // read cookie
+            getCookie: function (cName) {
+                var cookies = document.cookie;
+                if (cookies && cookies.length > 0) {
+                    var start = cookies.indexOf(cName+'='),
+                        end;
+                    if (start > -1) {
+                        start = start + cName.length + 1;
+                        end = cookies.indexOf(';', start);
+                        if (end == -1)
+                            end = cookies.length;
+                        return cookies.substring(start, end);
+                    }
+                }
+                return '';
+            },
+            // delete cookie
+            removeCookie: function (cName) {
+                var expTime = new Date();
+                expTime.setTime(expTime.getTime() + (-10*24*60*60*1000));
+                setCookie(cName, '', expTime, '/');
+            },
             // define a javascript class
             // clazz: string, class name
             // proto: object (i.e., {...}), class prototype
