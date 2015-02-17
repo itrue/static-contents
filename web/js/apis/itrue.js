@@ -23,6 +23,8 @@
             respFuncs: [],
             // event registry for class instances
             instEvtReg: {},
+            // functions for itrue.register/itrue.exec
+            funcRegistry: {},
             // called on document ready
             init: function () {
                 itrue.ready = true;
@@ -61,6 +63,27 @@
             // after ajax success
             afterResponse: function (foo) {
                 this.respFuncs.push(foo);
+            },
+            register: function (key, func) {
+                var reg = this.funcRegistry,
+                    arr = reg[key];
+                if (!arr) {
+                    reg[key] = [];
+                    arr = reg[key];
+                }
+                if (arr.indexOf(func) < 0)
+                    arr.push(func);
+            },
+            exec: function (key) {
+                var reg = this.funcRegistry,
+                    arr = reg[key];
+
+                if (!arr) return;
+                var len = arr.length,
+                    idx = 0;
+                for ( ; idx < len; idx++) {
+                    arr[idx]();
+                }
             },
             // util for reset timeout function of an instance
             replaceTimeout: function (wgt, func, delay, keyword) {
